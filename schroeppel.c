@@ -24,7 +24,6 @@ int main(void)
 #define used(x)    (using &  (((uint32_t) 1) << (x)))
 #define acquire(x) (using |= (((uint32_t) 1) << (x)))
 #define release(x) (using ^= (((uint32_t) 1) << (x)))
-#define min(a, b) ((a) < (b) ? (a) : (b))
 
 #define print_square() \
     do { \
@@ -106,7 +105,7 @@ int main(void)
                                     if (!(0 <= M_plus_N && M_plus_N <= (ORDER*ORDER-1) + (ORDER*ORDER-2)))
                                         continue;
                                     acquire(J);
-                                    for (K = min(K_plus_L, ORDER*ORDER - 1); K >= 0; K --) {
+                                    for (K = (K_plus_L >> 1); K >= 0; K --) {
                                         if (used(K))
                                             continue;
                                         {
@@ -121,7 +120,7 @@ int main(void)
                                         acquire(L);
                                         const cell_t K_xor_L = K ^ L;
                                         for (ikl = 0; ikl < 2; ikl ++, K ^= K_xor_L, L ^= K_xor_L) {
-                                            for (M = min(M_plus_N, ORDER*ORDER - 1); M >= 0; M --) {
+                                            for (M = (M_plus_N >> 1); M >= 0; M --) {
                                                 if (used(M))
                                                     continue;
                                                 {
@@ -167,7 +166,7 @@ int main(void)
 
                                                         /* Start of page 6 */
 
-                                                        for (R = min(R_plus_S, ORDER*ORDER - 1); R >= 0; R --) {
+                                                        for (R = (R_plus_S >> 1); R >= 0; R --) {
                                                             if (used(R))
                                                                 continue;
                                                             const cell_t V_plus_W = SUM - B - G - R;
@@ -186,7 +185,7 @@ int main(void)
                                                             const cell_t R_xor_S = R ^ S;
                                                             for (irs = 0; irs < 2; irs ++, R ^= R_xor_S, S ^= R_xor_S) {
                                                                 /* Now R and S are ready. */
-                                                                for (T = min(T_plus_U, ORDER*ORDER - 1); T >= 0; T --) {
+                                                                for (T = (T_plus_U >> 1); T >= 0; T --) {
                                                                     if (used(T))
                                                                         continue;
                                                                     {
@@ -202,7 +201,7 @@ int main(void)
                                                                     const cell_t T_xor_U = T ^ U;
                                                                     for (itu = 0; itu < 2; itu ++, T ^= T_xor_U, U ^= T_xor_U) {
                                                                         /* Now T and U are ready. */
-                                                                        for (V = min(V_plus_W, ORDER*ORDER - 1); V >= 0; V --) {
+                                                                        for (V = (V_plus_W >> 1); V >= 0; V --) {
                                                                             if (used(V))
                                                                                 continue;
                                                                             {
@@ -230,21 +229,19 @@ int main(void)
                                                                                 else if (tmp1 == tmpx || used(tmp1))
                                                                                     continue;
                                                                                 const cell_t tmp2 = SUM - E - F - S - tmpx;
-#if 0
+
                                                                                 if (tmp2 != tmp1) {
+#if 0
                                                                                     fprintf(stderr, "%s:%d: Schroeppel says it's an error\n", __FILE__, __LINE__);
                                                                                     return 1;
-                                                                                }
 #else
-                                                                                if (tmp2 != tmp1)
                                                                                     continue;
 #endif
-                                                                                //printf("MSQ with A=%d count=%d\n", A, count[A]);
-                                                                                //print_square();
-                                                                                verify_msq();
-                                                                                if (count[0] >= 1091448) {
-                                                                                    fprintf(stderr, "aaa\n");
                                                                                 }
+
+                                                                                printf("MSQ with A=%d count=%d\n", A, count[A]);
+                                                                                print_square();
+                                                                                verify_msq();
                                                                                 //printf("0x%08x %d\n", using, _popcnt64((uint64_t) using)); break;
                                                                                 //assert(_popcnt64((uint64_t) using) == 23); break;
                                                                                 count[A] ++;
