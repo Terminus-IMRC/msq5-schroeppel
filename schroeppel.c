@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
-#include <x86intrin.h>
-#include <assert.h>
 
 typedef int_fast8_t cell_t;
 
@@ -250,11 +248,9 @@ int main(void)
 #endif
                                                                                 }
 
-                                                                                //printf("MSQ with A=%d count=%d\n", A, count[A]);
+                                                                                //printf("MSQ with A=%2d No.%d\n", A, count);
                                                                                 //print_square();
                                                                                 //verify_msq();
-                                                                                //printf("0x%08x %d\n", using, _popcnt64((uint64_t) using)); break;
-                                                                                //assert(_popcnt64((uint64_t) using) == 23); break;
                                                                                 count ++;
                                                                             }
                                                                             release(W);
