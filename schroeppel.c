@@ -19,7 +19,11 @@ int main(void)
         G, M, Q, O, E;
     int i, ikl, imn, irs, itu, ivw;
     uint32_t using = ((uint32_t) 0);
-    uint32_t count[(ORDER*ORDER) >> 1] = {0};
+    uint32_t count[((ORDER*ORDER) >> 1) + 1] = {0};
+    /* Count of main diagonals. */
+    uint32_t count_d[((ORDER*ORDER) >> 1) + 1] = {0};
+    /* Count of Xs. */
+    uint32_t count_x[((ORDER*ORDER) >> 1) + 1] = {0};
 
 #define used(x)    (using &  (((uint32_t) 1) << (x)))
 #define acquire(x) (using |= (((uint32_t) 1) << (x)))
@@ -50,8 +54,8 @@ int main(void)
         assert(F + H + A + I + G == SUM); \
     } while (0)
 
-    //for (A = 0; A <= ((ORDER*ORDER) >> 1); A ++) {
-    A = 0; {
+    for (A = 0; A <= ((ORDER*ORDER) >> 1); A ++) {
+    //A = 0; {
         acquire(A);
         for (B = 0; B < ORDER*ORDER; B ++) {
             if (used(B))
@@ -72,6 +76,8 @@ int main(void)
                             continue;
                         E = tmp;
                     }
+                    count_d[A] ++;
+                    //continue;
                     acquire(D);
                     acquire(E);
                     for (F = B + 1; F < ORDER*ORDER; F ++) {
@@ -93,6 +99,8 @@ int main(void)
                                         continue;
                                     I = tmp;
                                 }
+                                count_x[A] ++;
+                                //continue;
                                 acquire(H);
                                 acquire(I);
                                 for (J = 0; J < ORDER*ORDER; J ++) {
@@ -239,8 +247,8 @@ int main(void)
 #endif
                                                                                 }
 
-                                                                                printf("MSQ with A=%d count=%d\n", A, count[A]);
-                                                                                print_square();
+                                                                                //printf("MSQ with A=%d count=%d\n", A, count[A]);
+                                                                                //print_square();
                                                                                 verify_msq();
                                                                                 //printf("0x%08x %d\n", using, _popcnt64((uint64_t) using)); break;
                                                                                 //assert(_popcnt64((uint64_t) using) == 23); break;
@@ -291,7 +299,11 @@ int main(void)
         release(A);
     }
 
-    for (i = 0; i < ((ORDER*ORDER) >> 1); i ++)
+    for (i = 0; i <= ((ORDER*ORDER) >> 1); i ++)
+        printf("count_d[A=%2d]: %" PRIu32 "\n", i, count_d[i]);
+    for (i = 0; i <= ((ORDER*ORDER) >> 1); i ++)
+        printf("count_x[A=%2d]: %" PRIu32 "\n", i, count_x[i]);
+    for (i = 0; i <= ((ORDER*ORDER) >> 1); i ++)
         printf("count of A=%2d: %" PRIu32 "\n", i, count[i]);
     printf("using = 0x%08x\n", using);
     return 0;
