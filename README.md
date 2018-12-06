@@ -31,7 +31,7 @@ Count (d, x, msq) of A=12: 906 762660 4769936
 sum = 68826306
 ```
 
-By multiplying the result by 4, you can get the famous result 275305224.
+By multiplying the sum by 4, you can get the famous result 275305224.
 
 
 <br /><hr />
