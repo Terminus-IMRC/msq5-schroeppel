@@ -180,9 +180,6 @@ int main(void)
                                                         for (R = (R_plus_S >> 1); R >= 0; R --) {
                                                             if (used(R))
                                                                 continue;
-                                                            const cell_t V_plus_W = SUM - B - G - R;
-                                                            if (!(0 <= V_plus_W && V_plus_W <= (ORDER*ORDER-1) + (ORDER*ORDER-2)))
-                                                                continue;
                                                             {
                                                                 const cell_t tmp = R_plus_S - R;
                                                                 if (!(0 <= tmp && tmp < ORDER*ORDER))
@@ -196,6 +193,9 @@ int main(void)
                                                             const cell_t R_xor_S = R ^ S;
                                                             for (irs = 0; irs < 2; irs ++, R ^= R_xor_S, S ^= R_xor_S) {
                                                                 /* Now R and S are ready. */
+                                                                const cell_t V_plus_W = SUM - B - G - R;
+                                                                if (!(0 <= V_plus_W && V_plus_W <= (ORDER*ORDER-1) + (ORDER*ORDER-2)))
+                                                                    continue;
                                                                 for (T = (T_plus_U >> 1); T >= 0; T --) {
                                                                     if (used(T))
                                                                         continue;
